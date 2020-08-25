@@ -37,11 +37,14 @@ class Passage extends CI_Controller{
      */
     function add()
     {   
+        if(!$_SESSION['add_passage']){
+            redirect('login');
+        }
         $id = $this->input->post('annee') . $this->input->post('passage');
         if($this->Passage_model->get_passage($id)){
             $this->session->set_flashdata('duplicate_id','Ce passage a déjà été ajouté.'); 
             $data['_view'] = 'passage/add';
-            return $this->load->view('admin/main',$data);
+            $this->load->view('admin/main',$data);
         }        
 
         //$annee = date('Y');
