@@ -68,6 +68,22 @@ class Permissions_par_groupes_model extends CI_Model
         $this->db->delete($this->table);
     }
 
+    function get_permissions_for_group($id)
+    {
+        $query = $this->db->query("SELECT 
+            permissions.id AS id_p, permissions.code, 
+            permissions.description, 
+            permissions_par_groupes.id AS id_pg, 
+            permissions_par_groupes.id_groupe 
+        FROM permissions LEFT JOIN permissions_par_groupes 
+        ON permissions.id=permissions_par_groupes.id_permission 
+        WHERE 
+            permissions_par_groupes.id_groupe=$id 
+            OR permissions_par_groupes.id_groupe IS NULL");
+
+        return $query->result_array();
+    }
+
 }
 
 /* End of file Permissions_par_groupes_model.php */

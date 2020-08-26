@@ -144,6 +144,18 @@ class Permissions_par_groupes extends CI_Controller
         }
     }
 
+    public function permissions_du_groupe($id) 
+    {
+        $row = $this->Permissions_par_groupes_model->get_permissions_for_group($id);
+
+        if ($row) {
+            var_dump($row);
+        } else {
+            $this->session->set_flashdata('message', 'Groupe non trouvé');
+            redirect(site_url('permissions_par_groupes/permissions_du_groupe'));
+        }
+    }
+
     public function _rules() 
     {
 	$this->form_validation->set_rules('id_groupe', 'id groupe', 'trim|required');
