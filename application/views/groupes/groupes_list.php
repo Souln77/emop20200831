@@ -57,7 +57,7 @@
 			<td><?php echo $groupes->description ?></td>
 			<td style="text-align:center" width="200px">
 				<?php 
-				echo anchor(site_url('groupes/read/'.$groupes->id),'Voir'); 
+				echo anchor(site_url('permissions_par_groupes/perms_du_group/'.$groupes->id),'Permissions'); 
 				echo ' | '; 
 				echo anchor(site_url('groupes/update/'.$groupes->id),'Modifier'); 
 				echo ' | '; 

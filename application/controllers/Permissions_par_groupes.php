@@ -144,16 +144,69 @@ class Permissions_par_groupes extends CI_Controller
         }
     }
 
-    public function permissions_du_groupe($id) 
-    {
-        $row = $this->Permissions_par_groupes_model->get_permissions_for_group($id);
-
-        if ($row) {
-            var_dump($row);
+    public function perms_du_group($id_group = NULL) 
+    {      
+        $permissions = $this->Permissions_model->get_all(); 
+        $perms_du_group = $this->Permissions_par_groupes_model->get_permissions_for_group($id_group);             
+        
+        if (!$this->input->post('id_group',TRUE)) {                        
+            $perms_du_group_toutes = [];
+            
+            foreach ($permissions as $x => $permission)
+            {
+                $perms_du_group_toutes[$x] = array(
+                    'id_perm' => $permission->id,
+                    'id_pg' => NULL,
+                    'code' => $permission->code,
+                    'description' => $permission->description,
+                    'statut' => 0, 
+                );
+                foreach ($perms_du_group as $perm_du_group)
+                {                    
+                    if($permission->id == $perm_du_group->id_permission )  { 
+                        $perms_du_group_toutes[$x]['id_pg'] = $perm_du_group->id; 
+                        if($perm_du_group->actif == 'o'){
+                            $perms_du_group_toutes[$x]['statut'] = 1;
+                        } 
+                    }  
+                }               
+            } 
+            $data['id_group'] = $id_group;
+            $data['nom_group'] = $this->Groupes_model->get_by_id($id_group);
+            $data['perms_du_group'] = $perms_du_group_toutes;
+            $data['button'] = "Définir";
+            $data['action'] = site_url('permissions_par_groupes/perms_du_group');
+            $data['_view'] = 'permissions_par_groupes/perms_du_group';
+            $this->load->view('layouts/main',$data);
         } else {
-            $this->session->set_flashdata('message', 'Groupe non trouvé');
-            redirect(site_url('permissions_par_groupes/permissions_du_groupe'));
+            // Traitement du submit
+            
+            foreach ($permissions as $x => $permission)
+            {
+                $id_pg = $this->input->post('id_pg' . $permission->id, TRUE);
+                if($this->input->post('id_perm' . $permission->id, TRUE)){ //Si coché                    
+                    $data = array(
+                        'id_groupe' => $this->input->post('id_group', TRUE),
+                        'id_permission' => $permission->id,
+                        'actif' => 'o',
+                    );                    
+                    if(!$this->Permissions_par_groupes_model->get_by_id($id_pg)){                        
+                        $this->Permissions_par_groupes_model->insert($data);
+                    } else {
+                        $this->Permissions_par_groupes_model->update($id_pg, $data);
+                    }                    
+                } else {
+                    $data = array(
+                        'id_groupe' => $this->input->post('id_group', TRUE),
+                        'id_permission' => $permission->id,
+                        'actif' => 'n',
+                    );
+                    $this->Permissions_par_groupes_model->update($id_pg, $data);
+                }           
+            }
         }
+        
+            
     }
 
     public function _rules() 

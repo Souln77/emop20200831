@@ -40,7 +40,8 @@ class Groupes extends CI_Controller
             'total_rows' => $config['total_rows'],
             'start' => $start,
         );
-        $this->load->view('groupes/groupes_list', $data);
+        $data['_view'] = 'groupes/groupes_list';
+        $this->load->view('layouts/main', $data);
     }
 
     public function read($id) 

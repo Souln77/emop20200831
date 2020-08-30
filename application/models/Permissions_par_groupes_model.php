@@ -68,6 +68,25 @@ class Permissions_par_groupes_model extends CI_Model
         $this->db->delete($this->table);
     }
 
+
+    // 
+    function get_permissions_for_group($id_group)
+    {
+        $this->db->where('id_groupe', $id_group);
+        return $this->db->get($this->table)->result();
+    }
+
+    /*
+    function reset_permissions_for_group($id_group)
+    {
+        $this->db->query('UPDATE `permissions_par_groupes` SET `actif`="n" WHERE `id_groupe`='.$id_group.'');        
+    }
+    */
+
+
+    
+
+    /*
     function get_permissions_for_group($id)
     {
         $query = $this->db->query("SELECT 
@@ -83,6 +102,7 @@ class Permissions_par_groupes_model extends CI_Model
 
         return $query->result_array();
     }
+    */
 
 }
 
