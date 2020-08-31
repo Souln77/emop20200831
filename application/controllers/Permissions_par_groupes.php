@@ -16,6 +16,7 @@ class Permissions_par_groupes extends CI_Controller
 
     public function index()
     {
+        /*
         $q = urldecode($this->input->get('q', TRUE));
         $start = intval($this->input->get('start'));
         
@@ -45,6 +46,7 @@ class Permissions_par_groupes extends CI_Controller
             'groupes_data' => $this->Groupes_model->get_all(),
         );
         $this->load->view('permissions_par_groupes/permissions_par_groupes_list', $data);
+        */
     }
 
     public function read($id) 
@@ -146,10 +148,17 @@ class Permissions_par_groupes extends CI_Controller
 
     public function perms_du_group($id_group = NULL) 
     {      
+        
         $permissions = $this->Permissions_model->get_all(); 
         $perms_du_group = $this->Permissions_par_groupes_model->get_permissions_for_group($id_group);             
         
-        if (!$this->input->post('id_group',TRUE)) {                        
+        if (!$this->input->post('id_group',TRUE)) {  
+            
+            $nom_group = $this->Groupes_model->get_by_id($id_group)->nom;
+            if($nom_group == "admin"){
+                $this->session->set_flashdata('message', 'La modification des permissions du groupe admin n\'est pas autorisée.');
+                redirect(site_url('groupes'));
+            }
             $perms_du_group_toutes = [];
             
             foreach ($permissions as $x => $permission)
@@ -172,7 +181,7 @@ class Permissions_par_groupes extends CI_Controller
                 }               
             } 
             $data['id_group'] = $id_group;
-            $data['nom_group'] = $this->Groupes_model->get_by_id($id_group);
+            $data['nom_group'] = $nom_group;
             $data['perms_du_group'] = $perms_du_group_toutes;
             $data['button'] = "Définir";
             $data['action'] = site_url('permissions_par_groupes/perms_du_group');
@@ -204,9 +213,12 @@ class Permissions_par_groupes extends CI_Controller
                     $this->Permissions_par_groupes_model->update($id_pg, $data);
                 }           
             }
-        }
-        
+            $this->session->set_flashdata('message', 'Permission(s) modifiée(s).');            
+            redirect(site_url('groupes'));       
             
+        }
+
+        
     }
 
     public function _rules() 

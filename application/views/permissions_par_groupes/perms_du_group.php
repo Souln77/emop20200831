@@ -17,7 +17,7 @@
     <div class="alert-warning">
 				<?php echo $this->session->flashdata('message'); ?>
 	</div>      
-        <h2 style="margin-top:0px"><?php echo $button ?> les permissions du groupe <?php echo $nom_group->nom ?></h2>
+        <h2 style="margin-top:0px"><?php echo $button ?> les permissions du groupe <?php echo $nom_group ?></h2>
         <form action="<?php echo $action; ?>" method="post">
 
         <?php foreach($perms_du_group as $E){ ?> 

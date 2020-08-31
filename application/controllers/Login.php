@@ -17,7 +17,7 @@ class Login extends CI_Controller{
      * Load login screen
      */
     function index()
-    {        
+    {   
         $data['_view'] = 'login/index';
         $this->load->view('layouts/login',$data);
     }
@@ -26,19 +26,41 @@ class Login extends CI_Controller{
      * Check credits
      */
     function check()
-    {            
+    {           
+
         $this->form_validation->set_rules('email','EMAIL','required|valid_email');
         $this->form_validation->set_rules('mdp','MOT DE PASSE','required');
         		
 		if($this->form_validation->run())     
         {   
-            $user_data = $this->Login_model->get_user_data($this->input->post('email'));
-            if(isset($user_data)){
-                print_r($user_data);
-                $user_group_permissions = $this->Login_model->get_user_group_permission($user_data['code_groupe']);
-            } else {
-                echo "Utilisateur non trouvé";
+            //Vérification mot de passe
+            $users_data = $this->Login_model->get_user_data($this->input->post('email'));                 
+            if($users_data['mdp'] != md5($this->input->post('mdp'))){
+                $this->session->set_flashdata('message', 'Login ou mot de passe incorrect.' . md5($this->input->post('mdp')) . ' ' . $users_data->mdp);            
+                redirect(site_url('login')); 
             }
+
+            //Chargement des données de l'utilisateur                       
+            if(isset($users_data)){ 
+                //$this->session->sess_destroy();
+                $_SESSION = [];
+
+                foreach ($users_data as $z => $user_data)
+                {   
+                    $_SESSION[$z] = $user_data;
+                    
+                }  
+
+                $user_group_permissions = $this->Login_model->get_user_group_permission($users_data['code_groupe']);
+                foreach ($user_group_permissions as $x => $permission)
+                {   
+                    $_SESSION[$permission['code']] = TRUE;
+                    
+                }                
+                echo "<pre>"; print_r($_SESSION); echo "</pre>"; 
+            } 
+
+            redirect(site_url('/'));             
         }
         else
         {            
@@ -92,8 +114,9 @@ class Login extends CI_Controller{
      * Loginout session
      */
     function logout()
-    {
-        $this->session->sess_destroy();    
+    { 
+        $this->session->sess_destroy(); 
+        redirect(site_url('/'));    
     }
     
 }

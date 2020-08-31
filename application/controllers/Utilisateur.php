@@ -84,17 +84,20 @@ class Utilisateur extends CI_Controller{
         {
             $this->load->library('form_validation');
 
-            $this->form_validation->set_rules('annee','ANNEE','required|exact_length[4]|greater_than[2019]',
+            $this->form_validation->set_rules('prenom','PRENOM','required',
             //array('required' => 'Le champ %s est obligatoire.')
             );
-            $this->form_validation->set_rules('utilisateur','PASSAGE','required|less_than[5]|greater_than[0]', 
-                //array('required' => 'Le champ %s est obligatoire.')
-            );
-			if($this->form_validation->run())     
+            $this->form_validation->set_rules('nom','NOM','required');
+            //$this->form_validation->set_rules('email','E-MAIL','required|valid_email');
+            
+            if($this->form_validation->run())     
             {   
                 $params = array(
-					'annee' => $this->input->post('annee'),
-					'utilisateur' => $this->input->post('utilisateur'),
+					'prenom' => $this->input->post('prenom'),
+					'nom' => $this->input->post('nom'),
+                    //'email' => $this->input->post('email'),
+                    //'mdp' => $this->input->post('mdp'),
+					'code_groupe' => $this->input->post('code_groupe'),
 					'date_maj' => $currentDateTime,					
                 );
 
@@ -103,6 +106,8 @@ class Utilisateur extends CI_Controller{
             }
             else
             {
+                $this->load->model('Groupes_model');
+				$data['all_groupes'] = $this->Groupes_model->get_all();
                 $data['_view'] = 'utilisateur/edit';
                 $this->load->view('layouts/main',$data);
             }

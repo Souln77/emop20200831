@@ -11,6 +11,7 @@
     </head>
     <body>
         <h2 style="margin-top:0px">Liste Groupes</h2>
+        
         <div class="row" style="margin-bottom: 10px">
             <div class="col-md-4">
                 <?php echo anchor(site_url('groupes/create'),'Ajouter', 'class="btn btn-primary"'); ?>

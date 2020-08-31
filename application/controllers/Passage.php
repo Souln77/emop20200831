@@ -18,6 +18,10 @@ class Passage extends CI_Controller{
      */
     function index()
     {
+        if(!$_SESSION['add_passage'] OR !$_SESSION['edit_passage']){
+            redirect('login');
+        }
+
         $params['limit'] = RECORDS_PER_PAGE; 
         $params['offset'] = ($this->input->get('per_page')) ? $this->input->get('per_page') : 0;
         

@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>suiviemopviacsweb_table_ECHANTILLON</title>
+        <title>SUIVI EMOP</title>
         <!-- Tell the browser to be responsive to screen width -->
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
         <!-- Bootstrap 3.3.6 -->
@@ -27,12 +27,12 @@
                 <!-- Logo -->
                 <a href="" class="logo">
                     <!-- mini logo for sidebar mini 50x50 pixels -->
-                    <span class="logo-mini">suiviemopviacsweb_table_ECHANTILLON</span>
+                    <span class="logo-mini">EMOP</span>
                     <!-- logo for regular state and mobile devices -->
-                    <span class="logo-lg">suiviemopviacsweb_table_ECHANTILLON</span>
+                    <span class="logo-lg">SUIVI EMOP</span>
                 </a>
                 <!-- Header Navbar: style can be found in header.less -->
-                <nav class="navbar navbar-static-top">
+                <nav class="navbar navbar-staticale-top">
                     <!-- Sidebar toggle button-->
                     <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
                         <span class="sr-only">Toggle navigation</span>
@@ -45,9 +45,18 @@
                         <ul class="nav navbar-nav">
                         <!-- User Account: style can be found in dropdown.less -->
                             <li class="dropdown user user-menu">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                    <img src="<?php echo site_url('resources/img/user2-160x160.jpg');?>" class="user-image" alt="User Image">
-                                    <span class="hidden-xs">Alexander Pierce</span>
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">                                    
+                                    <span class="hidden-xs ">
+                                        <?php 
+                                        if(ISSET($_SESSION['prenom'])){
+                                            //echo '<img src="' . site_url("resources/img/defaultuser.png") . '" class="user-image" alt="User Image">';
+                                            echo '<span class="fa fa-user-circle" > ' . $_SESSION['prenom'] . ' ' . $_SESSION['nom'] . '</span>';
+                                        } else {
+                                            //echo '<img src="' . site_url("resources/img/defaultuser.png") . '" class="user-image" alt="User Image">';
+                                            echo '<a class="fa fa-user-circle" style="padding:0px 0px 0px 0px;margin:0px 10px 0px 0px;" href="' . site_url('login') . '" >' . ' Se connecter</a>'; 
+                                        }
+                                        ?>
+                                    </span>
                                 </a>
                                 <ul class="dropdown-menu">
                                     <!-- User image -->
@@ -65,7 +74,7 @@
                                             <a href="#" class="btn btn-default btn-flat">Profile</a>
                                         </div>
                                         <div class="pull-right">
-                                            <a href="#" class="btn btn-default btn-flat">Sign out</a>
+                                            <a href="<?php echo site_url('login/logout'); ?>" class="btn btn-default btn-flat">Se déconnecter</a>
                                         </div>
                                     </li>
                                 </ul>

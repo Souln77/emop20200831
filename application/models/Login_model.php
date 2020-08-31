@@ -37,8 +37,13 @@ class Login_model extends CI_Model
      */
     function get_user_group_permission($group_code)
     {
-        return $this->db->get_where($this->table,array('email'=>$email))->row_array();
+        return $this->db->query('SELECT permissions.code 
+            FROM permissions_par_groupes, permissions 
+            WHERE permissions_par_groupes.id_permission=permissions.id 
+            AND permissions_par_groupes.actif="o" 
+            AND permissions_par_groupes.id_groupe='. $group_code .' ')->result_array();
     }
+
     /*
      * Get all count
      */

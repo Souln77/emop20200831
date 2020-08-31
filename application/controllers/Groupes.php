@@ -65,9 +65,9 @@ class Groupes extends CI_Controller
         $data = array(
             'button' => 'Ajouter',
             'action' => site_url('groupes/create_action'),
-	    'id' => set_value('id'),
-	    'nom' => set_value('nom'),
-	    'description' => set_value('description'),
+            'id' => set_value('id'),
+            'nom' => set_value('nom'),
+            'description' => set_value('description'),
 	);
         $this->load->view('groupes/groupes_form', $data);
     }
@@ -92,15 +92,21 @@ class Groupes extends CI_Controller
     
     public function update($id) 
     {
+        $nom_group = $this->Groupes_model->get_by_id($id)->nom;
+        if($nom_group == "admin"){
+            $this->session->set_flashdata('message', 'La modification du groupe admin n\'est pas autorisée.');
+            redirect(site_url('groupes'));
+        }
+        
         $row = $this->Groupes_model->get_by_id($id);
 
         if ($row) {
             $data = array(
                 'button' => 'Modifier',
                 'action' => site_url('groupes/update_action'),
-		'id' => set_value('id', $row->id),
-		'nom' => set_value('nom', $row->nom),
-		'description' => set_value('description', $row->description),
+                'id' => set_value('id', $row->id),
+                'nom' => set_value('nom', $row->nom),
+                'description' => set_value('description', $row->description),
 	    );
             $this->load->view('groupes/groupes_form', $data);
         } else {
@@ -129,6 +135,12 @@ class Groupes extends CI_Controller
     
     public function delete($id) 
     {
+        $nom_group = $this->Groupes_model->get_by_id($id)->nom;
+        if($nom_group == "admin"){
+            $this->session->set_flashdata('message', 'La suppression du groupe admin n\'est pas autorisée.');
+            redirect(site_url('groupes'));
+        }
+
         $row = $this->Groupes_model->get_by_id($id);
 
         if ($row) {
@@ -143,7 +155,7 @@ class Groupes extends CI_Controller
 
     public function _rules() 
     {
-	$this->form_validation->set_rules('nom', 'nom', 'trim|required');
+	$this->form_validation->set_rules('nom', 'nom', 'trim|required|is_unique[groupes.nom]');
 	$this->form_validation->set_rules('description', 'description', 'trim|required');
 
 	$this->form_validation->set_rules('id', 'id', 'trim');
